@@ -36,38 +36,10 @@
       class="wishlist-list-loader"
       height="105"
     >
-      <rect
-        x="0"
-        y="12"
-        rx="3"
-        ry="0"
-        width="100%"
-        height="11"
-      />
-      <rect
-        x="0"
-        y="36"
-        rx="3"
-        ry="0"
-        width="100%"
-        height="11"
-      />
-      <rect
-        x="0"
-        y="60"
-        rx="3"
-        ry="0"
-        width="100%"
-        height="11"
-      />
-      <rect
-        x="0"
-        y="84"
-        rx="3"
-        ry="0"
-        width="100%"
-        height="11"
-      />
+      <rect x="0" y="12" rx="3" ry="0" width="100%" height="11" />
+      <rect x="0" y="36" rx="3" ry="0" width="100%" height="11" />
+      <rect x="0" y="60" rx="3" ry="0" width="100%" height="11" />
+      <rect x="0" y="84" rx="3" ry="0" width="100%" height="11" />
     </ContentLoader>
 
     <p
@@ -83,7 +55,7 @@
   import getLists from '@graphqlFiles/queries/getlists';
   import addtolist from '@graphqlFiles/mutations/addtolist';
   import EventBus from '@components/EventBus';
-  import {ContentLoader} from 'vue-content-loader';
+  import { ContentLoader } from 'vue-content-loader';
 
   /**
    * The role of this component is to render a list
@@ -92,49 +64,49 @@
   export default {
     name: 'ChooseList',
     components: {
-      ContentLoader,
+      ContentLoader
     },
     apollo: {
       lists: {
         query: getLists,
         variables() {
           return {
-            url: this.url,
+            url: this.url
           };
-        },
-      },
+        }
+      }
     },
     props: {
       productId: {
         type: Number,
         required: true,
-        default: 0,
+        default: 0
       },
       quantity: {
         type: Number,
         required: true,
-        default: 0,
+        default: 0
       },
       productAttributeId: {
         type: Number,
         required: true,
-        default: 0,
+        default: 0
       },
       url: {
         type: String,
         required: true,
-        default: '',
+        default: ''
       },
       emptyText: {
         type: String,
         required: true,
-        default: 'No list found',
+        default: 'No list found'
       },
       addUrl: {
         type: String,
         required: true,
-        default: '',
-      },
+        default: ''
+      }
     },
     methods: {
       /**
@@ -145,18 +117,18 @@
        * @param {Int} productId The id of the product
        */
       async select(listId) {
-        const {data} = await this.$apollo.mutate({
+        const { data } = await this.$apollo.mutate({
           mutation: addtolist,
           variables: {
             listId,
             url: this.addUrl,
             productId: this.productId,
             quantity: this.quantity,
-            productAttributeId: this.productAttributeId,
-          },
+            productAttributeId: this.productAttributeId
+          }
         });
 
-        const {addToList: response} = data;
+        const { addToList: response } = data;
 
         /**
          * Hide the modal inside the parent
@@ -166,17 +138,17 @@
         EventBus.$emit('showToast', {
           detail: {
             type: response.success ? 'success' : 'error',
-            message: response.message,
-          },
+            message: response.message
+          }
         });
 
         /**
          * Send an event to the Heart the user previously clicked on
          */
         EventBus.$emit('addedToWishlist', {
-          detail: {productId: this.productId, listId},
+          detail: { productId: this.productId, listId }
         });
-      },
+      }
     },
     mounted() {
       /**
@@ -187,7 +159,7 @@
       EventBus.$on('refetchList', () => {
         this.$apollo.queries.lists.refetch();
       });
-    },
+    }
   };
 </script>
 

@@ -290,7 +290,11 @@ class BlockWishListActionModuleFrontController extends ModuleFrontController
             );
         }
 
-        return $this->ajaxRenderMissingParams();
+        return $this->ajaxRender(
+            json_encode([
+                'wishlists' => [],
+            ])
+        );
     }
 
     private function generateWishListToken()
